@@ -1,0 +1,5 @@
+{
+    
+    "python.analysis.extraPaths": ["./src/connect4", "./lib"]
+
+}

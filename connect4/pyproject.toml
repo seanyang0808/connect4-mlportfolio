@@ -9,7 +9,9 @@ authors = [
 requires-python = ">=3.13"
 dependencies = [
     "numpy>=2.5.3",
+    "pathlib>=1.0.1",
     "plotly>=7.1.0",
+    "pydantic>=2.13.5",
     "streamlit>=1.64.0",
     "torch>=2.14.0",
 ]
