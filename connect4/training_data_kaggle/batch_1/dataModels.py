@@ -10,7 +10,7 @@ cwd = os.getcwd()
 
 file_number = 1000
 
-path = r"C:\dev\ML\connect4\training_data_kaggle\batch_1\training_data_kagglebatch_1085103561.json"
+path = r"C:\Users\seany\Documents\ML\connect4\training_data_kaggle\batch_1"
 
 class GameState(BaseModel):
     board: list[list[str]]
