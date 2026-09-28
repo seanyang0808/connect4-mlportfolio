@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from torch.utils.data import TensorDataset, Dataset, DataLoader
 from pathlib import Path
-from ..dataManagement import dataManager
+from connect4.dataManagement import dataManager
 
 class  CNN(nn.Module):
     def __init__(self):
@@ -47,17 +47,19 @@ class  CNN(nn.Module):
             self,
             dataset: TensorDataset,
             model_file_path: str,
+            checkpoint_file_path = None,
             batch_size: int = 32, 
             epoch: int = 5,
             device: str = "cpu",
             checkpoint_frequency: int = 5000,
             report_frequency: int = 100,
-            shuffle: bool = True
+            shuffle: bool = True,
+            learning_rate: float = 0.001
             ):
         criterion = nn.CrossEntropyLoss()
         optimizer = torch.optim.Adam(
             self.parameters(),
-            lr = 0.0001
+            lr = learning_rate
             )
         dataloader = DataLoader(
             dataset,
@@ -65,9 +67,10 @@ class  CNN(nn.Module):
             shuffle=shuffle
         )
         train_turn = 0
-        for epoch in range(epoch):
-            self.train()
-
+        running_loss = 0
+        self.train()
+        self.to(device)
+        for epoch in range(1, epoch + 1):
             for batch_index, (batch_input, batch_output) in enumerate(dataloader):
 
                 batch_input = batch_input.to(device)
@@ -81,14 +84,12 @@ class  CNN(nn.Module):
                 optimizer.step()
 
                 train_turn +=1
-                running_loss += loss
+                running_loss += loss.item()
 
-                if train_turn % checkpoint_frequency == checkpoint_frequency-1:
-                    torch.save(self.state_dict(), str(model_file_path) + r"/checkpointmodel_" + str(checkpoint_frequency / 1000) + r".pt")
-
-                if train_turn % report_frequency == report_frequency-1:
-                    print("checkpoint: " + str(train_turn) + 
-                          f". Average loss over the last{train_turn} steps: " + 
+                if train_turn % checkpoint_frequency == checkpoint_frequency:
+                    torch.save(self.state_dict(), self.get_default_path(r"checkpointmodel_" + str(int(checkpoint_frequency / 1000)) + r".pt"))
+                if train_turn % report_frequency == 0:
+                    print(f"turn: {train_turn}. Average loss over the last {report_frequency} steps: " + 
                           str(running_loss / report_frequency))
                     running_loss = 0
         torch.save(self.state_dict(), Path(model_file_path))

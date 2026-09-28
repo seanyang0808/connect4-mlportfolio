@@ -46,7 +46,7 @@ def get_data(batch_n1, batch_n2):
     game_outcomes = []
     for subBatchNumber in range(batch_n1, batch_n2 + 1):
         print("loading data for: batch" + str(subBatchNumber))
-        data = torch.load(get_data_path(subBatchNumber))
+        data = torch.load(get_data_path(subBatchNumber), weights_only=False)
 
         for i in range(0, data.__len__()):
            input_position_matrices.append(data.__getitem__(i)[0])
