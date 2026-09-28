@@ -7,18 +7,6 @@ import json
 
 script_dir = pathlib.Path(__file__).resolve().parent
 
-#a class that can handle the compiled data files along with torch dataloader
-class Overall_dataset(Dataset):
-    def __init__(self):
-        self.data_list = []
-
-    def __len__(self):
-        return len(self.data_list)
-
-    def __getitem__(self, index):
-        tensor, number = self.data_list[index]
-        return tensor, number
-
 #a class that can handle the compiled data files along with torch dataloader    
 class TurnOutcomeSet(Dataset):
     def __init__(self):
