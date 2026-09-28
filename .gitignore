@@ -3,3 +3,4 @@
 
 #python
 __pycache__/
+connect4/src/connect4/game/__pycache__/
