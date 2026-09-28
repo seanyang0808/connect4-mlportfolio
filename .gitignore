@@ -1,2 +1,5 @@
 # connect4
 /connect4/.venv
+
+#python
+__pycache__/
