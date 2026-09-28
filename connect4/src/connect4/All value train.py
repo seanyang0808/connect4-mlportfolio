@@ -81,20 +81,23 @@ class Overall_dataset(Dataset):
 
 script_dir = pathlib.Path(__file__).resolve().parent
 
-sub1batchNumber = 1
-datapath = str(pathlib.Path(script_dir).parent.parent) + r"/training_data_kaggle/batch_" + str(sub1batchNumber) + r"/compiled.pt"
-data = torch.load(pathlib.Path(datapath), weights_only=False)
-
-print("getting data")
 model_path = str(pathlib.Path(script_dir).parent.parent) + r"/models"
 test_model_file_path = model_path + r"/test_model.pt"
 
-print("initiating data")
 positions = []
 labels = []
-for i in range(0, data.__len__()):
-    positions.append(data.__getitem__(i)[0])
-    labels.append(get_result(data.__getitem__(i)[0], data.__getitem__(i)[1]))
+
+print("initiating data")
+for subBatchNumber in range(1,11):
+    print("Getting data for batch" + str(subBatchNumber))
+    subBatchNumber = 1
+    datapath = str(pathlib.Path(script_dir).parent.parent) + r"/training_data_kaggle/batch_" + str(subBatchNumber) + r"/compiled.pt"
+    data = torch.load(pathlib.Path(datapath), weights_only=False)
+
+    for i in range(0, data.__len__()):
+        positions.append(data.__getitem__(i)[0])
+        labels.append(get_result(data.__getitem__(i)[0], data.__getitem__(i)[1]))
+
 dataset = TensorDataset(torch.stack(positions), torch.tensor(labels, dtype=torch.long))
         
 model = CNN()
@@ -111,29 +114,15 @@ dataloader = DataLoader(
     shuffle=True
 )
 
-# input = 0
-# game_outcome = 0
-# for training_step in range(2000):
-#     predicted_value = model(input)
-
-#     loss = criterion(predicted_value, get_result(game_outcome))
-#     if training_step % 100 == 99:
-#         print(training_step, loss.item())
-
-#     optimizer.zero_grad()
-#     loss.backward()
-
-#     optimizer.step()'
-
 device = torch.device("cpu")
 model.to(device)
 
 checkpoint = 0
 
 epoch = 5 
+running_loss = 0
 for epoch in range(epoch):
     model.train()
-    running_loss = 0
 
     for batch_index, (batch_input, batch_output) in enumerate(dataloader):
 

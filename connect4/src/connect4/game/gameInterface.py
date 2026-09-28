@@ -24,7 +24,7 @@ class ConnectFour:
         else:
             legality = False
         return legality
-
+    # the column number used here is 1 to 7
     def drop_piece(self, column_number: int, player_number: int):
         column_index_number = column_number - 1
         if not self.check_move_legality(column_number):
@@ -62,4 +62,3 @@ class ConnectFour:
 
     def print_board(self):
         print(self.board)
-
